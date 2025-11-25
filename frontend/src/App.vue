@@ -447,26 +447,69 @@
             </v-card>
           </v-dialog>
   
-          <!-- Global snackbar -->
-          <v-snackbar 
-            v-model="snackbar.show" 
-            location="bottom right"
-            :color="snackbar.color || 'error'"
-            :timeout="4000"
-            elevation="6"
-          >
-            <div class="d-flex align-center">
-              <v-icon class="mr-2">{{ snackbar.icon || 'mdi-alert-circle' }}</v-icon>
-              {{ snackbar.message }}
-            </div>
-            <template #actions>
+        <!-- Confirmation Dialog -->
+        <v-dialog v-model="confirmDialog.show" max-width="500px" persistent>
+          <v-card class="rounded-lg">
+            <v-card-title class="d-flex align-center pa-4 bg-error text-white">
+              <v-icon class="mr-2" color="white" size="28">mdi-alert-circle</v-icon>
+              <span class="text-h6">Confirm Deletion</span>
+            </v-card-title>
+            <v-card-text class="pa-6">
+              <div class="text-body-1">
+                {{ confirmDialog.message }}
+              </div>
+              <v-alert 
+                v-if="confirmDialog.warning"
+                type="warning" 
+                variant="tonal"
+                class="mt-4"
+                density="compact"
+              >
+                {{ confirmDialog.warning }}
+              </v-alert>
+            </v-card-text>
+            <v-divider />
+            <v-card-actions class="pa-4 justify-end">
               <v-btn
-                icon="mdi-close"
-                size="small"
-                @click="snackbar.show = false"
-              />
-            </template>
-          </v-snackbar>
+                variant="text"
+                @click="confirmDialog.show = false"
+                size="large"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                color="error"
+                variant="elevated"
+                @click="confirmDelete"
+                size="large"
+              >
+                <v-icon class="mr-1">mdi-delete</v-icon>
+                Delete
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <!-- Global snackbar -->
+        <v-snackbar 
+          v-model="snackbar.show" 
+          location="bottom right"
+          :color="snackbar.color || 'error'"
+          :timeout="4000"
+          elevation="6"
+        >
+          <div class="d-flex align-center">
+            <v-icon class="mr-2">{{ snackbar.icon || 'mdi-alert-circle' }}</v-icon>
+            {{ snackbar.message }}
+          </div>
+          <template #actions>
+            <v-btn
+              icon="mdi-close"
+              size="small"
+              @click="snackbar.show = false"
+            />
+          </template>
+        </v-snackbar>
         </v-container>
       </v-main>
     </v-app>
@@ -488,9 +531,16 @@
   const bookingsLoading = ref(false);
   const bookingsError = ref('');
   
-  const snackbar = ref({ show: false, message: '', color: 'error', icon: 'mdi-alert-circle' });
-  
-  const roomDialog = ref(false);
+const snackbar = ref({ show: false, message: '', color: 'error', icon: 'mdi-alert-circle' });
+
+const confirmDialog = ref({ 
+  show: false, 
+  message: '', 
+  warning: '',
+  onConfirm: null 
+});
+
+const roomDialog = ref(false);
   const roomFormRef = ref(null);
   const roomFormValid = ref(false);
   const editingRoom = ref(null);
@@ -533,6 +583,13 @@ function showSuccess(message) {
     color: 'success',
     icon: 'mdi-check-circle' 
   };
+}
+
+function confirmDelete() {
+  if (confirmDialog.value.onConfirm) {
+    confirmDialog.value.onConfirm();
+  }
+  confirmDialog.value.show = false;
 }
 
 const startDateInput = ref(null);
@@ -645,22 +702,28 @@ async function loadRooms() {
     }
   }
   
-  async function deleteRoom(room) {
-    if (!confirm(`Delete room "${room.name}"?`)) return;
-    try {
-      await api.deleteRoom(room.id);
-      rooms.value = rooms.value.filter(r => r.id !== room.id);
-      if (selectedRoomId.value === room.id) {
-        selectedRoomId.value = rooms.value[0]?.id || null;
-        bookings.value = [];
-        if (selectedRoomId.value) await loadBookings();
+function deleteRoom(room) {
+  confirmDialog.value = {
+    show: true,
+    message: `Are you sure you want to delete the room "${room.name}"?`,
+    warning: 'This action cannot be undone. All bookings for this room will also be deleted.',
+    onConfirm: async () => {
+      try {
+        await api.deleteRoom(room.id);
+        rooms.value = rooms.value.filter(r => r.id !== room.id);
+        if (selectedRoomId.value === room.id) {
+          selectedRoomId.value = rooms.value[0]?.id || null;
+          bookings.value = [];
+          if (selectedRoomId.value) await loadBookings();
+        }
+        showSuccess('Room deleted successfully!');
+      } catch (e) {
+        const msg = e.response?.data?.message || 'Failed to delete room';
+        showError(msg);
       }
-      showSuccess('Room deleted successfully!');
-    } catch (e) {
-      const msg = e.response?.data?.message || 'Failed to delete room';
-      showError(msg);
     }
-  }
+  };
+}
   
   function openBookingDialog(booking = null) {
     bookingServerErrors.value = [];
@@ -704,17 +767,23 @@ async function loadRooms() {
     }
   }
   
-  async function deleteBooking(booking) {
-    if (!confirm(`Delete booking "${booking.title}"?`)) return;
-    try {
-      await api.deleteBooking(booking.id);
-      bookings.value = bookings.value.filter(b => b.id !== booking.id);
-      showSuccess('Booking deleted successfully!');
-    } catch (e) {
-      const msg = e.response?.data?.message || 'Failed to delete booking';
-      showError(msg);
+function deleteBooking(booking) {
+  confirmDialog.value = {
+    show: true,
+    message: `Are you sure you want to delete the booking "${booking.title}"?`,
+    warning: 'This action cannot be undone.',
+    onConfirm: async () => {
+      try {
+        await api.deleteBooking(booking.id);
+        bookings.value = bookings.value.filter(b => b.id !== booking.id);
+        showSuccess('Booking deleted successfully!');
+      } catch (e) {
+        const msg = e.response?.data?.message || 'Failed to delete booking';
+        showError(msg);
+      }
     }
-  }
+  };
+}
   
   function formatDate(iso) {
     try {
