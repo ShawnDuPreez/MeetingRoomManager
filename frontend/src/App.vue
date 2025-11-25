@@ -369,21 +369,27 @@
                   />
                   
                   <v-text-field
+                    ref="startDateInput"
                     v-model="bookingForm.start"
                     label="Start Date & Time"
                     type="datetime-local"
                     variant="outlined"
                     prepend-inner-icon="mdi-calendar-clock"
-                    class="mb-3"
+                    class="mb-3 datetime-picker-field"
+                    @click="openDateTimePicker('startDateInput')"
+                    @click:prepend-inner="openDateTimePicker('startDateInput')"
                   />
                   
                   <v-text-field
+                    ref="endDateInput"
                     v-model="bookingForm.end"
                     label="End Date & Time"
                     type="datetime-local"
                     variant="outlined"
                     prepend-inner-icon="mdi-calendar-clock"
-                    class="mb-3"
+                    class="mb-3 datetime-picker-field"
+                    @click="openDateTimePicker('endDateInput')"
+                    @click:prepend-inner="openDateTimePicker('endDateInput')"
                   />
                   
                   <v-text-field
@@ -520,16 +526,43 @@
     };
   }
   
-  function showSuccess(message) {
-    snackbar.value = { 
-      show: true, 
-      message, 
-      color: 'success',
-      icon: 'mdi-check-circle' 
-    };
+function showSuccess(message) {
+  snackbar.value = { 
+    show: true, 
+    message, 
+    color: 'success',
+    icon: 'mdi-check-circle' 
+  };
+}
+
+const startDateInput = ref(null);
+const endDateInput = ref(null);
+
+function openDateTimePicker(refName) {
+  const inputRef = refName === 'startDateInput' ? startDateInput.value : endDateInput.value;
+  if (inputRef) {
+    // Get the actual native input element from the Vuetify component
+    const input = inputRef.$el.querySelector('input[type="datetime-local"]');
+    if (input) {
+      try {
+        // Try to use showPicker if available (modern browsers)
+        if (input.showPicker) {
+          input.showPicker();
+        } else {
+          // Fallback: focus the input which should show the picker
+          input.focus();
+          input.click();
+        }
+      } catch (e) {
+        // Fallback if showPicker fails
+        input.focus();
+        input.click();
+      }
+    }
   }
-  
-  async function loadRooms() {
+}
+
+async function loadRooms() {
     roomsLoading.value = true;
     roomsError.value = '';
     try {
@@ -741,6 +774,50 @@
   
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
+  }
+  
+  /* Make datetime picker fields more clickable */
+  .datetime-picker-field :deep(input[type="datetime-local"]) {
+    cursor: pointer !important;
+    font-size: 16px !important;
+    user-select: none;
+  }
+  
+  .datetime-picker-field :deep(input[type="datetime-local"]:hover) {
+    background-color: rgba(25, 118, 210, 0.04) !important;
+  }
+  
+  .datetime-picker-field :deep(.v-field:hover) {
+    background-color: rgba(25, 118, 210, 0.02);
+    cursor: pointer;
+  }
+  
+  .datetime-picker-field :deep(.v-field) {
+    transition: background-color 0.2s ease;
+  }
+  
+  .datetime-picker-field :deep(input[type="datetime-local"]::-webkit-calendar-picker-indicator) {
+    cursor: pointer;
+    padding: 8px;
+    margin-left: 8px;
+    border-radius: 4px;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+  }
+  
+  .datetime-picker-field :deep(input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover) {
+    background-color: rgba(25, 118, 210, 0.15);
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  
+  /* Make entire field area clickable */
+  .datetime-picker-field :deep(.v-field__input) {
+    cursor: pointer !important;
+  }
+  
+  .datetime-picker-field :deep(.v-field__prepend-inner) {
+    cursor: pointer;
   }
   </style>
   
