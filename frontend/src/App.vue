@@ -271,32 +271,35 @@
                   
                   <v-text-field
                     v-model.number="roomForm.capacity"
-                    label="Capacity"
+                    label="Capacity (Optional)"
                     placeholder="Maximum number of people"
                     type="number"
                     variant="outlined"
                     prepend-inner-icon="mdi-account-group"
                     :rules="[v => !v || v > 0 || 'Capacity must be > 0']"
                     class="mb-3"
+                    persistent-placeholder
                   />
                   
                   <v-textarea
                     v-model="roomForm.equipment"
-                    label="Equipment"
+                    label="Equipment (Optional)"
                     placeholder="e.g., Projector, Whiteboard, Video Conferencing"
                     variant="outlined"
                     prepend-inner-icon="mdi-devices"
                     rows="2"
                     class="mb-3"
+                    persistent-placeholder
                   />
                   
                   <v-textarea
                     v-model="roomForm.notes"
-                    label="Notes"
+                    label="Notes (Optional)"
                     placeholder="Additional information about this room"
                     variant="outlined"
                     prepend-inner-icon="mdi-note-text"
                     rows="2"
+                    persistent-placeholder
                   />
                   
                   <v-alert
@@ -356,11 +359,12 @@
                   
                   <v-text-field
                     v-model="bookingForm.bookedBy"
-                    label="Booked By"
+                    label="Booked By (Optional)"
                     placeholder="Your name"
                     variant="outlined"
                     prepend-inner-icon="mdi-account"
                     class="mb-3"
+                    persistent-placeholder
                   />
                   
                   <v-row>
@@ -373,6 +377,7 @@
                         prepend-inner-icon="mdi-clock-start"
                         hint="Format: YYYY-MM-DDTHH:MM"
                         persistent-hint
+                        persistent-placeholder
                       />
                     </v-col>
                     <v-col cols="6">
@@ -384,27 +389,30 @@
                         prepend-inner-icon="mdi-clock-end"
                         hint="Format: YYYY-MM-DDTHH:MM"
                         persistent-hint
+                        persistent-placeholder
                       />
                     </v-col>
                   </v-row>
                   
                   <v-text-field
                     v-model.number="bookingForm.attendees"
-                    label="Number of Attendees"
+                    label="Number of Attendees (Optional)"
                     placeholder="Expected number of participants"
                     type="number"
                     variant="outlined"
                     prepend-inner-icon="mdi-account-group"
                     class="mb-3"
+                    persistent-placeholder
                   />
                   
                   <v-textarea
                     v-model="bookingForm.description"
-                    label="Description"
+                    label="Description (Optional)"
                     placeholder="Meeting agenda or additional details"
                     variant="outlined"
                     prepend-inner-icon="mdi-text-box"
                     rows="3"
+                    persistent-placeholder
                   />
                   
                   <v-alert
