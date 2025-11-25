@@ -272,13 +272,14 @@
                   <v-text-field
                     v-model.number="roomForm.capacity"
                     label="Capacity (Optional)"
-                    placeholder="Maximum number of people"
+                    placeholder="e.g., 10"
                     type="number"
                     variant="outlined"
                     prepend-inner-icon="mdi-account-group"
                     :rules="[v => !v || v > 0 || 'Capacity must be > 0']"
                     class="mb-3"
                     persistent-placeholder
+                    min="1"
                   />
                   
                   <v-textarea
@@ -367,42 +368,34 @@
                     persistent-placeholder
                   />
                   
-                  <v-row>
-                    <v-col cols="6">
-                      <v-text-field
-                        v-model="bookingForm.start"
-                        label="Start Time"
-                        placeholder="2025-11-25T10:00"
-                        variant="outlined"
-                        prepend-inner-icon="mdi-clock-start"
-                        hint="Format: YYYY-MM-DDTHH:MM"
-                        persistent-hint
-                        persistent-placeholder
-                      />
-                    </v-col>
-                    <v-col cols="6">
-                      <v-text-field
-                        v-model="bookingForm.end"
-                        label="End Time"
-                        placeholder="2025-11-25T11:00"
-                        variant="outlined"
-                        prepend-inner-icon="mdi-clock-end"
-                        hint="Format: YYYY-MM-DDTHH:MM"
-                        persistent-hint
-                        persistent-placeholder
-                      />
-                    </v-col>
-                  </v-row>
+                  <v-text-field
+                    v-model="bookingForm.start"
+                    label="Start Date & Time"
+                    type="datetime-local"
+                    variant="outlined"
+                    prepend-inner-icon="mdi-calendar-clock"
+                    class="mb-3"
+                  />
+                  
+                  <v-text-field
+                    v-model="bookingForm.end"
+                    label="End Date & Time"
+                    type="datetime-local"
+                    variant="outlined"
+                    prepend-inner-icon="mdi-calendar-clock"
+                    class="mb-3"
+                  />
                   
                   <v-text-field
                     v-model.number="bookingForm.attendees"
                     label="Number of Attendees (Optional)"
-                    placeholder="Expected number of participants"
+                    placeholder="e.g., 5"
                     type="number"
                     variant="outlined"
                     prepend-inner-icon="mdi-account-group"
                     class="mb-3"
                     persistent-placeholder
+                    min="1"
                   />
                   
                   <v-textarea
