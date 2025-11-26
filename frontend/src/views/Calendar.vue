@@ -73,11 +73,14 @@
                         <v-card 
                           class="booking-detail-card" 
                           elevation="3"
-                          :color="getBookingColor(booking)"
                         >
                           <v-card-text class="pa-5">
+                            <div 
+                              class="booking-color-dot"
+                              :style="{ backgroundColor: roomColorMap[booking.roomId] || colors[0] }"
+                            ></div>
                             <div class="d-flex align-center justify-space-between mb-4">
-                              <div class="text-h5 font-weight-bold text-white">
+                              <div class="text-h5 font-weight-bold">
                                 {{ booking.title }}
                               </div>
                               <v-chip 
@@ -89,34 +92,34 @@
                               </v-chip>
                             </div>
 
-                            <div class="d-flex align-center text-white mb-3">
-                              <v-icon color="white" class="mr-3">mdi-door</v-icon>
+                            <div class="d-flex align-center mb-3">
+                              <v-icon color="primary" class="mr-3">mdi-door</v-icon>
                               <div>
                                 <div class="text-body-1 font-weight-medium">{{ booking.roomName }}</div>
                                 <div class="text-caption opacity-90">{{ booking.roomLocation }}</div>
                               </div>
                             </div>
 
-                            <div class="d-flex align-center text-white mb-3">
-                              <v-icon color="white" class="mr-3">mdi-clock-outline</v-icon>
+                            <div class="d-flex align-center mb-3">
+                              <v-icon color="primary" class="mr-3">mdi-clock-outline</v-icon>
                               <span class="text-h6 font-weight-medium">
                                 {{ formatTimeOnly(booking.start) }} – {{ formatTimeOnly(booking.end) }}
                               </span>
                             </div>
 
-                            <div class="d-flex align-center text-white mb-3">
-                              <v-icon color="white" class="mr-3">mdi-account</v-icon>
+                            <div class="d-flex align-center mb-3">
+                              <v-icon color="primary" class="mr-3">mdi-account</v-icon>
                               <span class="text-body-1">{{ booking.bookedBy }}</span>
                             </div>
 
-                            <div v-if="booking.attendees" class="d-flex align-center text-white mb-3">
-                              <v-icon color="white" class="mr-3">mdi-account-group</v-icon>
+                            <div v-if="booking.attendees" class="d-flex align-center mb-3">
+                              <v-icon color="primary" class="mr-3">mdi-account-group</v-icon>
                               <span class="text-body-1">{{ booking.attendees }} attendees</span>
                             </div>
 
                             <v-divider v-if="booking.description" class="my-4 opacity-30" />
 
-                            <div v-if="booking.description" class="text-body-1 text-white opacity-90" style="line-height: 1.6;">
+                            <div v-if="booking.description" class="text-body-1 opacity-90" style="line-height: 1.6;">
                               {{ booking.description }}
                             </div>
                           </v-card-text>
@@ -157,7 +160,7 @@
                       class="d-flex align-center legend-item"
                     >
                       <div 
-                        :style="{ backgroundColor: colors[index % colors.length] }" 
+                        :style="{ backgroundColor: roomColorMap[room.id] || colors[0] }" 
                         class="dot-legend mr-3"
                       ></div>
                       <div>
@@ -198,13 +201,20 @@ const colors = [
   '#512DA8'  // deep purple
 ];
 
+const roomColorMap = computed(() => {
+  const map = {};
+  rooms.value.forEach((room, index) => {
+    map[room.id] = colors[index % colors.length];
+  });
+  return map;
+});
+
 // Prepare calendar attributes (dots for bookings)
 const calendarAttributes = computed(() => {
   const attributes = [];
   
   allBookings.value.forEach((booking) => {
-    const roomIndex = rooms.value.findIndex(r => r.id === booking.roomId);
-    const color = colors[roomIndex % colors.length];
+    const color = roomColorMap.value[booking.roomId] || colors[0];
     
     attributes.push({
       key: booking.id,
@@ -244,22 +254,17 @@ const formatSelectedDate = computed(() => {
   });
 });
 
-function getBookingColor(booking) {
-  const index = rooms.value.findIndex(r => r.id === booking.roomId);
-  return colors[index % colors.length];
-}
-
 function getBookingStatus(booking) {
   const now = new Date();
   const start = new Date(booking.start);
   const end = new Date(booking.end);
   
   if (now < start) {
-    return { status: 'upcoming', color: 'white', label: 'Upcoming' };
+    return { status: 'upcoming', color: 'primary', label: 'Upcoming' };
   } else if (now >= start && now <= end) {
-    return { status: 'ongoing', color: 'white', label: 'Ongoing' };
+    return { status: 'ongoing', color: 'success', label: 'Ongoing' };
   } else {
-    return { status: 'past', color: 'white', label: 'Past' };
+    return { status: 'past', color: 'grey-darken-1', label: 'Past' };
   }
 }
 
@@ -317,11 +322,36 @@ onMounted(() => {
   border-radius: 16px !important;
   transition: all 0.3s ease;
   overflow: hidden;
+  background-color: transparent !important;
 }
 
 .booking-detail-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25) !important;
+}
+
+.booking-detail-card :deep(.v-card-text) {
+  position: relative;
+  background-color: rgb(var(--v-theme-surface));
+}
+
+.v-theme--dark .booking-detail-card :deep(.v-card-text) {
+  background-color: rgb(var(--v-theme-surface));
+}
+
+.booking-color-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.v-theme--dark .booking-color-dot {
+  border: 2px solid rgba(0, 0, 0, 0.6);
 }
 
 .opacity-90 {

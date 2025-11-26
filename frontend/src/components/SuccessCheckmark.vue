@@ -102,11 +102,13 @@ watch(() => props.show, (newVal) => {
   stroke-dasharray: 48;
   stroke-dashoffset: 48;
   stroke-width: 4;
+  stroke: #ffffff;
   animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
 }
 
 .v-theme--dark .checkmark-check {
   stroke-width: 5;
+  stroke: #ffffff;
 }
 
 .success-text {

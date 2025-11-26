@@ -159,12 +159,16 @@
                   cols="12"
                 >
                   <v-card 
-                    class="booking-card rounded-xl stagger-item" 
+                    class="booking-card rounded-xl stagger-item booking-card-surface" 
                     elevation="1"
                     hover
                     :style="{ animationDelay: `${index * 50}ms` }"
                   >
-                    <v-card-text>
+                    <v-card-text class="position-relative">
+                      <div 
+                        class="booking-color-dot"
+                        :style="{ backgroundColor: roomColorMap[b.roomId] || ROOM_COLORS[0] }"
+                      ></div>
                       <div class="d-flex justify-space-between align-start">
                         <div class="flex-grow-1">
                           <div class="d-flex align-center mb-2">
@@ -296,6 +300,17 @@ import BookingFormDialog from '../components/BookingFormDialog.vue';
 import ConfirmDialog from '../components/ConfirmDialog.vue';
 import SuccessCheckmark from '../components/SuccessCheckmark.vue';
 
+const ROOM_COLORS = [
+  '#1976D2',
+  '#9C27B0',
+  '#00796B',
+  '#F57C00',
+  '#E91E63',
+  '#3F51B5',
+  '#00ACC1',
+  '#512DA8'
+];
+
 const rooms = ref([]);
 const roomsLoading = ref(false);
 const roomsError = ref('');
@@ -344,6 +359,14 @@ const bookingForm = ref({
   attendees: null
 });
 const bookingServerErrors = ref([]);
+
+const roomColorMap = computed(() => {
+  const map = {};
+  rooms.value.forEach((room, index) => {
+    map[room.id] = ROOM_COLORS[index % ROOM_COLORS.length];
+  });
+  return map;
+});
 
 function showError(message) {
   snackbar.value = { 
@@ -568,6 +591,26 @@ onMounted(() => {
 .booking-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.booking-card-surface {
+  background-color: rgb(var(--v-theme-surface)) !important;
+  position: relative;
+}
+
+.booking-color-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.v-theme--dark .booking-color-dot {
+  border: 2px solid rgba(0, 0, 0, 0.6);
 }
 
 .v-list-item {
