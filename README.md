@@ -182,7 +182,8 @@ meeting-room-manager/
 
 ## Time Spent
 
-**Total Time**: _[To be filled in]_ hours
+**Total Time**: Approximately **3 hours** of working time
+
 
 ## Development Notes
 
