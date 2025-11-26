@@ -2,7 +2,7 @@
   <v-container class="py-8" fluid>
     <v-row>
       <v-col cols="12">
-        <v-card elevation="2" class="rounded-lg">
+        <v-card elevation="2" class="rounded-2xl">
           <v-card-title class="bg-primary text-white pa-4">
             <div class="d-flex align-center">
               <v-icon class="mr-2" color="white">mdi-calendar-month</v-icon>
@@ -143,7 +143,7 @@
               </v-dialog>
 
               <!-- Legend -->
-              <v-card class="mt-6 rounded-lg" elevation="3">
+              <v-card class="mt-6 rounded-xl" elevation="3">
                 <v-card-text class="pa-6">
                   <div class="d-flex align-center mb-4">
                     <v-icon color="primary" class="mr-2">mdi-information-outline</v-icon>
@@ -332,9 +332,14 @@ onMounted(() => {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   border: 2px solid white;
   flex-shrink: 0;
+}
+
+.v-theme--dark .dot-legend {
+  border: 2px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .legend-item {
@@ -347,6 +352,10 @@ onMounted(() => {
 .legend-item:hover {
   background-color: #f5f5f5;
   transform: translateY(-1px);
+}
+
+.v-theme--dark .legend-item:hover {
+  background-color: #3a3a3a;
 }
 
 .gap-4 {
@@ -369,6 +378,10 @@ onMounted(() => {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+.v-theme--dark :deep(.vc-container) {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
 :deep(.vc-header) {
   padding: 32px 24px;
   background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
@@ -378,6 +391,10 @@ onMounted(() => {
   justify-content: center;
   position: relative;
   min-height: 100px;
+}
+
+.v-theme--dark :deep(.vc-header) {
+  background: linear-gradient(135deg, #42A5F5 0%, #1E88E5 100%);
 }
 
 :deep(.vc-title) {
@@ -407,6 +424,12 @@ onMounted(() => {
   border-bottom: 2px solid #e0e0e0;
 }
 
+.v-theme--dark :deep(.vc-weekday) {
+  color: #42A5F5;
+  background-color: #1a1a1a;
+  border-bottom: 2px solid #444;
+}
+
 :deep(.vc-day) {
   min-height: 100px;
   border: 1px solid #e8e8e8;
@@ -417,11 +440,22 @@ onMounted(() => {
   background-color: white;
 }
 
+.v-theme--dark :deep(.vc-day) {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+}
+
 :deep(.vc-day:hover) {
   background-color: #f5f8ff;
   border-color: #1976D2;
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(25, 118, 210, 0.1);
+}
+
+.v-theme--dark :deep(.vc-day:hover) {
+  background-color: #3a3a3a;
+  border-color: #42A5F5;
+  box-shadow: 0 2px 8px rgba(66, 165, 245, 0.2);
 }
 
 :deep(.vc-day-content) {
@@ -434,10 +468,20 @@ onMounted(() => {
   padding-top: 4px;
 }
 
+.v-theme--dark :deep(.vc-day-content) {
+  color: #e0e0e0;
+}
+
 :deep(.vc-day.is-today) {
   background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
   border: 2px solid #1976D2;
   box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+
+.v-theme--dark :deep(.vc-day.is-today) {
+  background: linear-gradient(135deg, #1565C0 0%, #0D47A1 100%);
+  border: 2px solid #42A5F5;
+  box-shadow: 0 0 0 3px rgba(66, 165, 245, 0.2);
 }
 
 :deep(.vc-day.is-today .vc-day-content) {
@@ -445,14 +489,28 @@ onMounted(() => {
   font-weight: 800;
 }
 
+.v-theme--dark :deep(.vc-day.is-today .vc-day-content) {
+  color: #fff;
+}
+
 :deep(.vc-day.weekday-1),
 :deep(.vc-day.weekday-7) {
   background-color: #fafafa;
 }
 
+.v-theme--dark :deep(.vc-day.weekday-1),
+.v-theme--dark :deep(.vc-day.weekday-7) {
+  background-color: #1e1e1e;
+}
+
 :deep(.vc-day.weekday-1:hover),
 :deep(.vc-day.weekday-7:hover) {
   background-color: #f0f4ff;
+}
+
+.v-theme--dark :deep(.vc-day.weekday-1:hover),
+.v-theme--dark :deep(.vc-day.weekday-7:hover) {
+  background-color: #353535;
 }
 
 :deep(.vc-dots) {
@@ -473,17 +531,30 @@ onMounted(() => {
   height: 10px !important;
   border-radius: 50%;
   margin: 0 !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  border: 2px solid white !important;
+}
+
+.v-theme--dark :deep(.vc-dot) {
+  border: 2px solid #2a2a2a !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 :deep(.vc-day.is-not-in-month) {
   background-color: #f9f9f9;
 }
 
+.v-theme--dark :deep(.vc-day.is-not-in-month) {
+  background-color: #1a1a1a;
+}
+
 :deep(.vc-day.is-not-in-month .vc-day-content) {
   color: #bdbdbd;
   font-weight: 400;
+}
+
+.v-theme--dark :deep(.vc-day.is-not-in-month .vc-day-content) {
+  color: #666;
 }
 
 :deep(.vc-arrows-container) {

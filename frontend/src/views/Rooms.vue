@@ -3,7 +3,7 @@
     <v-row>
       <!-- Left Panel: Rooms -->
       <v-col cols="12" md="4">
-        <v-card elevation="2" class="rounded-lg">
+        <v-card elevation="2" class="rounded-xl">
           <v-card-title class="d-flex align-center justify-space-between bg-primary pa-4">
             <div class="d-flex align-center">
               <v-icon class="mr-2" color="white">mdi-door</v-icon>
@@ -105,7 +105,7 @@
 
       <!-- Right Panel: Bookings -->
       <v-col cols="12" md="8">
-        <v-card elevation="2" class="rounded-lg">
+        <v-card elevation="2" class="rounded-xl">
           <v-card-title class="bg-primary pa-4">
             <div class="d-flex align-center text-white mb-3">
               <v-icon class="mr-2" color="white">mdi-calendar-clock</v-icon>
@@ -115,7 +115,7 @@
               </div>
             </div>
             <v-btn
-              color="white"
+              color="surface"
               variant="elevated"
               :disabled="!selectedRoom"
               class="text-none"

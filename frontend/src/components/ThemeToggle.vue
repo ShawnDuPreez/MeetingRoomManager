@@ -1,11 +1,14 @@
 <template>
   <v-btn
-    :icon="theme.global.current.value.dark ? 'mdi-white-balance-sunny' : 'mdi-weather-night'"
     variant="text"
     @click="toggleTheme"
     class="theme-toggle-btn"
+    color="white"
+    icon
   >
-    <v-icon :class="{ 'rotate': isAnimating }"></v-icon>
+    <v-icon :class="{ 'rotate': isAnimating }">
+      {{ theme.global.current.value.dark ? 'mdi-white-balance-sunny' : 'mdi-weather-night' }}
+    </v-icon>
   </v-btn>
 </template>
 

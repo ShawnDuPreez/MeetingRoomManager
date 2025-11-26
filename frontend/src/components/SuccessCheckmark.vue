@@ -44,7 +44,7 @@ watch(() => props.show, (newVal) => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,55 +54,70 @@ watch(() => props.show, (newVal) => {
 
 .success-container {
   background: white;
-  border-radius: 20px;
-  padding: 40px;
+  border-radius: 24px;
+  padding: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
 }
 
 .v-theme--dark .success-container {
-  background: #1E1E1E;
+  background: #2d2d2d;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
 }
 
 .checkmark {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   display: block;
-  stroke-width: 2;
+  stroke-width: 3;
   stroke: #4CAF50;
   stroke-miterlimit: 10;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   animation: fill 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
+}
+
+.v-theme--dark .checkmark {
+  stroke: #66BB6A;
 }
 
 .checkmark-circle {
   stroke-dasharray: 166;
   stroke-dashoffset: 166;
-  stroke-width: 2;
+  stroke-width: 3;
   stroke-miterlimit: 10;
   stroke: #4CAF50;
   fill: none;
   animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
 }
 
+.v-theme--dark .checkmark-circle {
+  stroke: #66BB6A;
+}
+
 .checkmark-check {
   transform-origin: 50% 50%;
   stroke-dasharray: 48;
   stroke-dashoffset: 48;
+  stroke-width: 4;
   animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
 }
 
+.v-theme--dark .checkmark-check {
+  stroke-width: 5;
+}
+
 .success-text {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.5rem;
+  font-weight: 700;
   color: #4CAF50;
+  margin-top: 8px;
 }
 
 .v-theme--dark .success-text {
-  color: #66BB6A;
+  color: #81C784;
 }
 
 @keyframes stroke {
@@ -122,8 +137,18 @@ watch(() => props.show, (newVal) => {
 
 @keyframes fill {
   100% {
-    box-shadow: inset 0px 0px 0px 30px #4CAF50;
+    box-shadow: inset 0px 0px 0px 50px #4CAF50;
   }
+}
+
+@keyframes fill-dark {
+  100% {
+    box-shadow: inset 0px 0px 0px 50px #66BB6A;
+  }
+}
+
+.v-theme--dark .checkmark {
+  animation: fill-dark 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
 }
 
 .fade-enter-active, .fade-leave-active {
