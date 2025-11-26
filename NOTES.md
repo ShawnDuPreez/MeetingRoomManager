@@ -154,6 +154,21 @@
 8. **No booking search**: Cannot search or filter bookings across all rooms
 9. **No recurring bookings**: Each meeting must be created individually
 
+## Bug Fixes
+
+### Calendar Color-Coding Issue (Fixed)
+- **Issue**: Calendar dots were all showing the same color despite different rooms having unique colors in the legend
+- **Root Cause**: The v-calendar library requires inline `backgroundColor` styles rather than the `color` property for dot customization
+- **Solution**: Updated `Calendar.vue` to use `dot: { class: 'booking-dot', style: { backgroundColor: color } }` with proper CSS styling
+- **Result**: Each room's bookings now display with their unique color on the calendar grid, matching the legend
+
+### Duplicate Constant Declarations (Fixed)
+- **Issue**: JavaScript error preventing app from loading - `ROOM_COLORS` and `roomColorMap` declared twice
+- **Root Cause**: Code duplication in `Rooms.vue`
+- **Solution**: Removed duplicate constant and computed property declarations
+- **Result**: Application loads correctly without JavaScript errors
+
+
 ## Conclusion
 
 This implementation provides a solid foundation for a meeting room management system with all core CRUD operations, validation, and a clean user interface. The architecture is suitable for a demo/prototype but would need significant enhancements for production use, particularly around data persistence, security, and scalability.

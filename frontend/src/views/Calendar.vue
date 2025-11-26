@@ -558,6 +558,7 @@ onMounted(() => {
   z-index: 1;
 }
 
+
 :deep(.vc-dot) {
   width: 10px !important;
   height: 10px !important;
@@ -583,6 +584,7 @@ onMounted(() => {
 .v-theme--dark :deep(.booking-dot) {
   border: 2px solid rgba(0, 0, 0, 0.6);
 }
+
 
 :deep(.vc-day.is-not-in-month) {
   background-color: #f9f9f9;
