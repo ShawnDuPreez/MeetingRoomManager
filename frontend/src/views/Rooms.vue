@@ -46,13 +46,14 @@
 
             <v-list v-else class="bg-transparent">
               <v-list-item
-                v-for="room in rooms"
+                v-for="(room, index) in rooms"
                 :key="room.id"
                 @click="selectRoom(room)"
                 :active="room.id === selectedRoomId"
-                class="mb-2 rounded-lg"
+                class="mb-2 rounded-xl stagger-item"
                 color="primary"
                 :class="{ 'elevation-2': room.id === selectedRoomId }"
+                :style="{ animationDelay: `${index * 50}ms` }"
               >
                 <template #prepend>
                   <v-avatar color="primary" size="40">
@@ -153,14 +154,15 @@
             <div v-else>
               <v-row v-if="bookings.length">
                 <v-col 
-                  v-for="b in bookings" 
+                  v-for="(b, index) in bookings" 
                   :key="b.id" 
                   cols="12"
                 >
                   <v-card 
-                    class="booking-card" 
+                    class="booking-card rounded-xl stagger-item" 
                     elevation="1"
                     hover
+                    :style="{ animationDelay: `${index * 50}ms` }"
                   >
                     <v-card-text>
                       <div class="d-flex justify-space-between align-start">
@@ -168,6 +170,14 @@
                           <div class="d-flex align-center mb-2">
                             <v-icon color="primary" class="mr-2">mdi-calendar-check</v-icon>
                             <span class="text-h6 font-weight-medium">{{ b.title }}</span>
+                            <v-chip 
+                              :color="getBookingStatus(b).color"
+                              size="small"
+                              class="ml-2"
+                              variant="flat"
+                            >
+                              {{ getBookingStatus(b).label }}
+                            </v-chip>
                           </div>
                           
                           <div class="d-flex align-center text-body-2 mb-1">
@@ -272,6 +282,9 @@
         />
       </template>
     </v-snackbar>
+
+    <!-- Success Animation -->
+    <success-checkmark v-model:show="showSuccessAnimation" :message="successMessage" />
   </v-container>
 </template>
 
@@ -281,6 +294,7 @@ import api from '../api';
 import RoomFormDialog from '../components/RoomFormDialog.vue';
 import BookingFormDialog from '../components/BookingFormDialog.vue';
 import ConfirmDialog from '../components/ConfirmDialog.vue';
+import SuccessCheckmark from '../components/SuccessCheckmark.vue';
 
 const rooms = ref([]);
 const roomsLoading = ref(false);
@@ -295,6 +309,9 @@ const bookingsLoading = ref(false);
 const bookingsError = ref('');
 
 const snackbar = ref({ show: false, message: '', color: 'error', icon: 'mdi-alert-circle' });
+
+const showSuccessAnimation = ref(false);
+const successMessage = ref('Success!');
 
 const confirmDialog = ref({ 
   show: false, 
@@ -415,7 +432,9 @@ async function saveRoom() {
       const { data } = await api.updateRoom(editingRoom.value.id, roomForm.value);
       const index = rooms.value.findIndex(r => r.id === data.id);
       rooms.value.splice(index, 1, data);
-      showSuccess('Room updated successfully!');
+      roomDialog.value = false;
+      successMessage.value = 'Room updated successfully!';
+      showSuccessAnimation.value = true;
     } else {
       const { data } = await api.createRoom(roomForm.value);
       rooms.value.push(data);
@@ -423,9 +442,10 @@ async function saveRoom() {
         selectedRoomId.value = data.id;
         loadBookings();
       }
-      showSuccess('Room created successfully!');
+      roomDialog.value = false;
+      successMessage.value = 'Room created successfully!';
+      showSuccessAnimation.value = true;
     }
-    roomDialog.value = false;
   } catch (e) {
     roomServerErrors.value = e.response?.data?.errors || ['Unexpected error'];
   }
@@ -479,13 +499,16 @@ async function saveBooking() {
       const { data } = await api.updateBooking(editingBooking.value.id, bookingForm.value);
       const index = bookings.value.findIndex(b => b.id === data.id);
       bookings.value.splice(index, 1, data);
-      showSuccess('Booking updated successfully!');
+      bookingDialog.value = false;
+      successMessage.value = 'Booking updated successfully!';
+      showSuccessAnimation.value = true;
     } else {
       const { data } = await api.createRoomBooking(selectedRoomId.value, bookingForm.value);
       bookings.value.push(data);
-      showSuccess('Booking created successfully!');
+      bookingDialog.value = false;
+      successMessage.value = 'Booking created successfully!';
+      showSuccessAnimation.value = true;
     }
-    bookingDialog.value = false;
   } catch (e) {
     bookingServerErrors.value = e.response?.data?.errors || ['Unexpected error'];
   }
@@ -517,6 +540,20 @@ function formatDate(iso) {
   }
 }
 
+function getBookingStatus(booking) {
+  const now = new Date();
+  const start = new Date(booking.start);
+  const end = new Date(booking.end);
+  
+  if (now < start) {
+    return { status: 'upcoming', color: '#2196F3', label: 'Upcoming' };
+  } else if (now >= start && now <= end) {
+    return { status: 'ongoing', color: '#4CAF50', label: 'Ongoing' };
+  } else {
+    return { status: 'past', color: '#9E9E9E', label: 'Past' };
+  }
+}
+
 onMounted(() => {
   loadRooms();
 });
@@ -543,6 +580,22 @@ onMounted(() => {
 
 .rounded-lg {
   border-radius: 12px !important;
+}
+
+/* Stagger animation */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stagger-item {
+  animation: fadeSlideIn 0.4s ease-out both;
 }
 </style>
 

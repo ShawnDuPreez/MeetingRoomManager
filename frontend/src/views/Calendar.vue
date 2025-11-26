@@ -76,8 +76,17 @@
                           :color="getBookingColor(booking)"
                         >
                           <v-card-text class="pa-5">
-                            <div class="text-h5 font-weight-bold text-white mb-4">
-                              {{ booking.title }}
+                            <div class="d-flex align-center justify-space-between mb-4">
+                              <div class="text-h5 font-weight-bold text-white">
+                                {{ booking.title }}
+                              </div>
+                              <v-chip 
+                                :color="getBookingStatus(booking).color"
+                                size="small"
+                                variant="outlined"
+                              >
+                                {{ getBookingStatus(booking).label }}
+                              </v-chip>
                             </div>
 
                             <div class="d-flex align-center text-white mb-3">
@@ -238,6 +247,20 @@ const formatSelectedDate = computed(() => {
 function getBookingColor(booking) {
   const index = rooms.value.findIndex(r => r.id === booking.roomId);
   return colors[index % colors.length];
+}
+
+function getBookingStatus(booking) {
+  const now = new Date();
+  const start = new Date(booking.start);
+  const end = new Date(booking.end);
+  
+  if (now < start) {
+    return { status: 'upcoming', color: 'white', label: 'Upcoming' };
+  } else if (now >= start && now <= end) {
+    return { status: 'ongoing', color: 'white', label: 'Ongoing' };
+  } else {
+    return { status: 'past', color: 'white', label: 'Past' };
+  }
 }
 
 async function loadAllBookings() {

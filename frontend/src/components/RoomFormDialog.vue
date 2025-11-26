@@ -1,6 +1,6 @@
 <template>
   <v-dialog :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)" max-width="600px" persistent>
-    <v-card class="rounded-lg">
+    <v-card class="rounded-xl glass-dialog">
       <v-card-title class="bg-primary text-white pa-4">
         <v-icon class="mr-2" color="white">
           {{ editingRoom?.id ? 'mdi-pencil' : 'mdi-plus-circle' }}
@@ -131,4 +131,18 @@ async function handleSave() {
   emit('save');
 }
 </script>
+
+<style scoped>
+.glass-dialog {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.v-theme--dark .glass-dialog {
+  background: rgba(30, 30, 30, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+</style>
 

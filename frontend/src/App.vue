@@ -12,27 +12,34 @@
             </div>
           </div>
           
-          <v-tabs 
-            v-model="currentTab" 
-            color="white" 
-            class="ml-auto"
-            align-tabs="end"
-          >
-            <v-tab :to="{ name: 'Rooms' }" value="rooms">
-              <v-icon class="mr-2">mdi-door</v-icon>
-              Rooms
-            </v-tab>
-            <v-tab :to="{ name: 'Calendar' }" value="calendar">
-              <v-icon class="mr-2">mdi-calendar-month</v-icon>
-              Calendar
-            </v-tab>
-          </v-tabs>
+          <div class="d-flex align-center ml-auto">
+            <theme-toggle class="mr-4" />
+            
+            <v-tabs 
+              v-model="currentTab" 
+              color="white"
+              align-tabs="end"
+            >
+              <v-tab :to="{ name: 'Rooms' }" value="rooms">
+                <v-icon class="mr-2">mdi-door</v-icon>
+                Rooms
+              </v-tab>
+              <v-tab :to="{ name: 'Calendar' }" value="calendar">
+                <v-icon class="mr-2">mdi-calendar-month</v-icon>
+                Calendar
+              </v-tab>
+            </v-tabs>
+          </div>
         </div>
       </v-container>
     </v-app-bar>
 
-    <v-main class="bg-grey-lighten-4">
-      <router-view />
+    <v-main>
+      <router-view v-slot="{ Component }">
+        <transition name="page" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
     </v-main>
   </v-app>
 </template>
@@ -40,14 +47,59 @@
 <script setup>
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
+import ThemeToggle from './components/ThemeToggle.vue';
 
 const route = useRoute();
 const currentTab = ref('rooms');
 </script>
 
 <style>
+/* Global font */
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
 .v-card-title {
   letter-spacing: 0.5px;
+}
+
+/* Enhanced shadows on hover */
+.v-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+  transition: box-shadow 0.3s ease;
+}
+
+.v-theme--dark .v-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Border radius variations */
+.rounded-lg {
+  border-radius: 16px !important;
+}
+
+.rounded-xl {
+  border-radius: 20px !important;
+}
+
+.rounded-2xl {
+  border-radius: 24px !important;
+}
+
+/* Page transitions */
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.3s ease;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
 }
 
 /* Custom scrollbar */
@@ -61,6 +113,10 @@ const currentTab = ref('rooms');
   border-radius: 4px;
 }
 
+.v-theme--dark ::-webkit-scrollbar-track {
+  background: #2a2a2a;
+}
+
 ::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 4px;
@@ -70,7 +126,7 @@ const currentTab = ref('rooms');
   background: #555;
 }
 
-.rounded-lg {
-  border-radius: 12px !important;
+.v-theme--dark ::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
 }
 </style>

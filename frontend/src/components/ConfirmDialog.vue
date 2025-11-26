@@ -1,6 +1,6 @@
 <template>
   <v-dialog :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)" max-width="500px" persistent>
-    <v-card class="rounded-lg">
+    <v-card class="rounded-xl glass-dialog">
       <v-card-title class="d-flex align-center pa-4 bg-error text-white">
         <v-icon class="mr-2" color="white" size="28">mdi-alert-circle</v-icon>
         <span class="text-h6">Confirm Deletion</span>
@@ -51,4 +51,18 @@ defineProps({
 
 defineEmits(['update:modelValue', 'confirm']);
 </script>
+
+<style scoped>
+.glass-dialog {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.v-theme--dark .glass-dialog {
+  background: rgba(30, 30, 30, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+</style>
 
