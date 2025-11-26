@@ -220,8 +220,10 @@ const calendarAttributes = computed(() => {
       key: booking.id,
       dates: new Date(booking.start),
       dot: {
-        color: color,
-        class: 'booking-dot'
+        class: 'booking-dot',
+        style: {
+          backgroundColor: color
+        }
       },
       customData: booking
     });
@@ -568,6 +570,18 @@ onMounted(() => {
 .v-theme--dark :deep(.vc-dot) {
   border: 2px solid #2a2a2a !important;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+:deep(.booking-dot) {
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.v-theme--dark :deep(.booking-dot) {
+  border: 2px solid rgba(0, 0, 0, 0.6);
 }
 
 :deep(.vc-day.is-not-in-month) {
